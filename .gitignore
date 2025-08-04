@@ -1,0 +1,11 @@
+*.env
+*.csv
+__pycache__/
+*.py[cod]
+*.so
+.virtual_documents/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

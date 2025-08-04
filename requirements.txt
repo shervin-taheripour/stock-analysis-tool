@@ -1,0 +1,28 @@
+# Core finance/data libraries
+alpha_vantage
+yfinance
+finnhub-python
+
+# Data handling and analysis
+pandas
+numpy
+
+# Visualization
+matplotlib
+seaborn
+
+# Machine learning (optional but standard)
+scikit-learn
+
+# Database and ETL
+sqlalchemy
+psycopg2
+
+# Environment/config
+python-dotenv
+requests
+
+# Jupyter notebook support
+jupyterlab
+notebook
+ipykernel
