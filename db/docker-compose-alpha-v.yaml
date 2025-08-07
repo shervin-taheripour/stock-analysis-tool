@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+
+  alpha_v_ingest:
+    build:
+      context: ../ingestion/alpha_vantage
+    container_name: alpha_v_ingest
+    depends_on:
+      - postgres
+    environment:
+      - ALPHAVANTAGE_KEY=${ALPHAVANTAGE_KEY}
+      - DB_URL=${DB_URL}
+    command: ["python", "alpha_v_methods_updated.py"]
+
+  postgres:
+    image: postgres:15
+    container_name: finance_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypw1234
+      POSTGRES_DB: finance_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
