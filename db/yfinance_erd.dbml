@@ -1,0 +1,112 @@
+Table analyst_recommendations {
+  ticker TEXT [pk]
+  period TEXT [pk]
+  strong_buy INTEGER
+  buy INTEGER
+  hold INTEGER
+  sell INTEGER
+  strong_sell INTEGER
+}
+
+Table company_metadata {
+  ticker TEXT [pk]
+  key TEXT
+  value TEXT
+}
+
+Table dividends {
+  ticker TEXT [pk]
+  date DATE [pk]
+  dividends NUMERIC
+}
+
+Table earnings_date {
+  ticker TEXT [pk]
+  earnings_date DATE [pk]
+  eps_estimate NUMERIC
+  reported_eps NUMERIC
+  surprise NUMERIC
+}
+
+Table events_calendar {
+  ticker TEXT [pk]
+  event_type TEXT [pk]
+  event_date TIMESTAMP
+}
+
+Table financials_balance {
+  ticker TEXT [pk]
+  report_date DATE [pk]
+  metric_name TEXT [pk]
+  value NUMERIC
+}
+
+Table financials_cashflow {
+  ticker TEXT [pk]
+  report_date DATE [pk]
+  metric_name TEXT [pk]
+  value NUMERIC
+}
+
+Table financials_income {
+  ticker TEXT [pk]
+  report_date DATE [pk]
+  metric_name TEXT [pk]
+  value NUMERIC
+}
+
+Table ohlcv_data_raw {
+  ticker TEXT [pk]
+  date DATE [pk]
+  open NUMERIC
+  high NUMERIC
+  low NUMERIC
+  close NUMERIC
+  volume BIGINT
+  dividends NUMERIC
+  splits NUMERIC
+}
+
+Table options_chain {
+  contract_symbol TEXT [pk]
+  last_trade_date TIMESTAMP
+  strike NUMERIC
+  last_price NUMERIC
+  bid NUMERIC
+  ask NUMERIC
+  change NUMERIC
+  percent_change NUMERIC
+  volume INTEGER
+  open_interest INTEGER
+  implied_volatility NUMERIC
+  in_the_money BOOLEAN
+  contract_size TEXT
+  currency TEXT
+  option_type TEXT
+  expiration_date DATE
+  ticker TEXT
+}
+
+Table splits {
+  ticker TEXT [pk]
+  date DATE [pk]
+  splits NUMERIC
+}
+
+Table sustainability_data {
+  ticker TEXT [pk]
+  metric_name TEXT [pk]
+  esg_score NUMERIC
+}
+
+Ref: ohlcv_data_raw.ticker > company_metadata.ticker
+Ref: financials_income.ticker > company_metadata.ticker
+Ref: financials_balance.ticker > company_metadata.ticker
+Ref: financials_cashflow.ticker > company_metadata.ticker
+Ref: events_calendar.ticker > company_metadata.ticker
+Ref: sustainability_data.ticker > company_metadata.ticker
+Ref: dividends.ticker > company_metadata.ticker
+Ref: splits.ticker > company_metadata.ticker
+Ref: earnings_date.ticker > company_metadata.ticker
+Ref: analyst_recommendations.ticker > company_metadata.ticker
+Ref: options_chain.ticker > company_metadata.ticker
