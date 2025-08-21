@@ -10,9 +10,11 @@ numpy
 # Visualization
 matplotlib
 seaborn
+mplfinance
 
 # Machine learning (optional but standard)
 scikit-learn
+statsmodels
 
 # Database and ETL
 sqlalchemy
