@@ -1,13 +1,13 @@
 # =========================
-# FILE: yfinance_methods.py
+# FILE: yfinance_methods_v2.py
 # =========================
 # Lightweight, no‑nonsense helpers that match your original functions
 # and add small robustness (optional period / start-end, UTC dates,
 # consistent column names, empty‑DataFrame fallbacks).
 #
-# ✅ Keep it simple: one file you can import in your EDA notebook.
-# ✅ Functions mirror your list, not over‑engineered.
-# ✅ Safe when yfinance returns empty/None.
+# Keep it simple: one file you can import in your EDA notebook.
+# Functions mirror your list, not over‑engineered.
+# Safe when yfinance returns empty/None.
 
 from __future__ import annotations
 import pandas as pd
@@ -128,7 +128,8 @@ def get_options_chain(ticker: str, expiration: str) -> pd.DataFrame:
     df = pd.concat([calls, puts], ignore_index=True)
     df["ticker"] = ticker
     df["expiration_date"] = expiration
-    # common rename (yfinance naming)
+
+    # Rename columns to standard names
     df = df.rename(columns={
         "contractSymbol": "contract_symbol",
         "lastTradeDate": "last_trade_date",
@@ -139,7 +140,14 @@ def get_options_chain(ticker: str, expiration: str) -> pd.DataFrame:
         "inTheMoney": "in_the_money",
         "contractSize": "contract_size",
     })
+
+    # Ensure last_trade_date is timezone-naive datetime
     df = _ensure_dt(df, "last_trade_date")
+    
+    # Ensure expiration_date is timezone-naive datetime
+    df["expiration_date"] = pd.to_datetime(df["expiration_date"], errors="coerce")
+    df["expiration_date"] = df["expiration_date"].dt.tz_localize(None)
+
     return df
 
 
