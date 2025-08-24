@@ -388,6 +388,7 @@ def plot_delta_hedge_pnl(delta_hedge_df, ticker):
 
 # --- BINOMIAL PRICES VS STRIKE PLOT ---
 
+
 def plot_binomial_vs_strike(binomial_df, ticker):
     df = binomial_df[binomial_df["ticker"] == ticker]
     if df.empty:

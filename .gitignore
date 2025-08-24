@@ -1,5 +1,4 @@
 *.env
-*.csv
 __pycache__/
 *.py[cod]
 *.so
@@ -9,3 +8,4 @@ __pycache__/
 Thumbs.db
 .vscode/
 .idea/
+/analysis/data/
