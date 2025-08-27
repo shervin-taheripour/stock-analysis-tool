@@ -4,7 +4,6 @@ import pandas as pd
 import yfinance as yf
 from datetime import datetime, timedelta
 
-# 
 def get_ohlcv_data(ticker: str, start: str, end: str) -> pd.DataFrame:
     df = yf.Ticker(ticker).history(start=start, end=end).copy()
     df.reset_index(inplace=True)
@@ -21,13 +20,13 @@ def get_ohlcv_data(ticker: str, start: str, end: str) -> pd.DataFrame:
     }, inplace=True)
     return df[["ticker", "date", "open", "high", "low", "close", "volume", "dividends", "splits"]]
 
-
 def get_ohlcv_data_db(ticker: str, ticker_id: int, start: str, end: str) -> pd.DataFrame:
     df = get_ohlcv_data(ticker, start, end)
     if 'ticker' in df.columns:
         df.drop('ticker', axis=1, inplace=True)
     df["ticker_id"] = ticker_id
     return df[["ticker_id", "date", "open", "high", "low", "close", "volume", "dividends", "splits"]]
+
 
 def get_company_metadata(ticker: str) -> pd.DataFrame:
     info = yf.Ticker(ticker).info
@@ -41,6 +40,7 @@ def get_company_metadata_db(ticker: str, ticker_id: int) -> pd.DataFrame:
         df.drop('ticker', axis=1, inplace=True)
     df["ticker_id"] = ticker_id
     return df[["ticker_id", "key", "value"]]
+
 
 def get_options_chain(ticker: str, expiration: str) -> pd.DataFrame:
     chain = yf.Ticker(ticker).option_chain(expiration)
@@ -70,6 +70,7 @@ def get_options_chain_db(ticker: str, ticker_id: int, expiration: str) -> pd.Dat
     df["ticker_id"] = ticker_id
     return df[["ticker_id", "contract_symbol", "last_trade_date", "strike", "last_price", "bid", "ask", "change", "percent_change", "volume", "open_interest", "implied_volatility", "in_the_money", "contract_size", "currency", "option_type", "expiration_date"]]
 
+
 def get_financials_long(ticker: str, kind: str) -> pd.DataFrame:
     tk = yf.Ticker(ticker)
     if kind == "income":
@@ -84,7 +85,6 @@ def get_financials_long(ticker: str, kind: str) -> pd.DataFrame:
     df.columns = ["metric_name", "report_date", "value"]
     df["ticker"] = ticker
     return df[["ticker", "report_date", "metric_name", "value"]]
-
 
 def get_events_calendar(ticker: str) -> pd.DataFrame:
     calendar = yf.Ticker(ticker).calendar
@@ -130,7 +130,6 @@ def get_earnings_dates(ticker: str) -> pd.DataFrame:
     df["ticker"] = ticker
     return df[["ticker", "earnings_date", "eps_estimate", "reported_eps", "surprise"]]
 
-
 def get_analyst_recommendations(ticker: str) -> pd.DataFrame:
     df = yf.Ticker(ticker).recommendations
     if df is None or df.empty:
@@ -145,3 +144,4 @@ def get_analyst_recommendations(ticker: str) -> pd.DataFrame:
     })
     df["ticker"] = ticker
     return df[["ticker", "period", "strong_buy", "buy", "hold", "sell", "strong_sell"]]
+
