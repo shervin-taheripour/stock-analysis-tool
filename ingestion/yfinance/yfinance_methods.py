@@ -20,11 +20,27 @@ def get_ohlcv_data(ticker: str, start: str, end: str) -> pd.DataFrame:
     }, inplace=True)
     return df[["ticker", "date", "open", "high", "low", "close", "volume", "dividends", "splits"]]
 
+def get_ohlcv_data_db(ticker: str, ticker_id: int, start: str, end: str) -> pd.DataFrame:
+    df = get_ohlcv_data(ticker, start, end)
+    if 'ticker' in df.columns:
+        df.drop('ticker', axis=1, inplace=True)
+    df["ticker_id"] = ticker_id
+    return df[["ticker_id", "date", "open", "high", "low", "close", "volume", "dividends", "splits"]]
+
+
 def get_company_metadata(ticker: str) -> pd.DataFrame:
     info = yf.Ticker(ticker).info
     df = pd.DataFrame(info.items(), columns=["key", "value"])
     df["ticker"] = ticker
     return df[["ticker", "key", "value"]]
+
+def get_company_metadata_db(ticker: str, ticker_id: int) -> pd.DataFrame:
+    df = get_company_metadata(ticker)
+    if 'ticker' in df.columns:
+        df.drop('ticker', axis=1, inplace=True)
+    df["ticker_id"] = ticker_id
+    return df[["ticker_id", "key", "value"]]
+
 
 def get_options_chain(ticker: str, expiration: str) -> pd.DataFrame:
     chain = yf.Ticker(ticker).option_chain(expiration)
@@ -46,6 +62,14 @@ def get_options_chain(ticker: str, expiration: str) -> pd.DataFrame:
         "contractSize": "contract_size"
     }, inplace=True)
     return df
+
+def get_options_chain_db(ticker: str, ticker_id: int, expiration: str) -> pd.DataFrame:
+    df = get_options_chain(ticker, expiration)
+    if 'ticker' in df.columns:
+        df.drop('ticker', axis=1, inplace=True)
+    df["ticker_id"] = ticker_id
+    return df[["ticker_id", "contract_symbol", "last_trade_date", "strike", "last_price", "bid", "ask", "change", "percent_change", "volume", "open_interest", "implied_volatility", "in_the_money", "contract_size", "currency", "option_type", "expiration_date"]]
+
 
 def get_financials_long(ticker: str, kind: str) -> pd.DataFrame:
     tk = yf.Ticker(ticker)
@@ -72,6 +96,7 @@ def get_events_calendar(ticker: str) -> pd.DataFrame:
     df["ticker"] = ticker
     return df[["ticker", "event_type", "event_date"]]
 
+
 def get_sustainability_data(ticker: str) -> pd.DataFrame:
     sustain = yf.Ticker(ticker).sustainability
     if sustain is None:
@@ -81,17 +106,20 @@ def get_sustainability_data(ticker: str) -> pd.DataFrame:
     df["ticker"] = ticker
     return df[["ticker", "metric_name", "esg_score"]]
 
+
 def get_dividends(ticker: str) -> pd.DataFrame:
     df = yf.Ticker(ticker).dividends.reset_index()
     df.columns = ["date", "dividends"]
     df["ticker"] = ticker
     return df[["ticker", "date", "dividends"]]
 
+
 def get_splits(ticker: str) -> pd.DataFrame:
     df = yf.Ticker(ticker).splits.reset_index()
     df.columns = ["date", "splits"]
     df["ticker"] = ticker
     return df[["ticker", "date", "splits"]]
+
 
 def get_earnings_dates(ticker: str) -> pd.DataFrame:
     df = yf.Ticker(ticker).earnings_dates
@@ -116,3 +144,4 @@ def get_analyst_recommendations(ticker: str) -> pd.DataFrame:
     })
     df["ticker"] = ticker
     return df[["ticker", "period", "strong_buy", "buy", "hold", "sell", "strong_sell"]]
+
